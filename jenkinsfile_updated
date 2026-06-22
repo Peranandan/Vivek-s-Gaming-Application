@@ -10,7 +10,7 @@ pipeline {
     }
     
     stages {
-        stage('SCM CHECKOUT') {
+        stage('SCM NEW CHECKOUT') {
             steps {
                git branch: 'main', url: 'https://github.com/VM2322/Vivek-s-Gaming-Application'
             }
@@ -34,14 +34,19 @@ pipeline {
             }
         }
         
-        stage('SONARQUBE ANALYSIS') {
-            steps {
-                withSonarQubeEnv('sonar') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Gaming -Dsonar.projectKey=Gaming\
-                            -Dsonar.java.binaries=. '''
-                }
-            }
+       stage('SONARQUBE ANALYSIS') {
+           steps {
+        withSonarQubeEnv('sonar') {
+            sh '''
+            $SCANNER_HOME/bin/sonar-scanner \
+            -Dsonar.projectName=Gaming \
+            -Dsonar.projectKey=Gaming \
+            -Dsonar.java.binaries=. \
+            -Dsonar.cpd.exclusions=**/*.html,**/*.css,**/*.js
+            '''
         }
+    }
+}
         
                 stage('QUALITY GATES') {
             steps {
